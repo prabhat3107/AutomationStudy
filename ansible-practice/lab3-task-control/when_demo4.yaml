@@ -1,0 +1,17 @@
+- name: Demo Conditionals based on variables 
+  hosts: list1
+  vars:
+    epic: ""
+    mounumental: "no"
+  tasks: 
+    - name: Run the command if "epic" or "mounumental" is ture
+      debug:
+        msg:
+          - " Epic is {{ epic }}"
+          - " Mounumental is {{ mounumental }}" 
+      when: epic or mounumental | bool
+
+    - name: Run the command if "epic" is false
+      debug:
+        msg: " Epic is {{ epic }}"
+      when: not epic

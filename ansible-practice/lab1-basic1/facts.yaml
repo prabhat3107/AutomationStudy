@@ -1,0 +1,8 @@
+---
+- name: Show or Print Facts
+  hosts: cos8s-svr1.sriauronet.local, usrv1.sriauronet.local
+  tasks: 
+    - name: Print facts
+      debug:
+        var: ansible_facts
+...

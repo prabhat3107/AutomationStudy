@@ -1,0 +1,6 @@
+---
+- name: Demo of various use case of failed_when
+  hosts: all
+  tasks:
+    - name: Failed task when the command error output prints FAILED
+      command: /usr/local/bin/runme

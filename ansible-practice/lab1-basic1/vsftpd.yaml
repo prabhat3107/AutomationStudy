@@ -1,0 +1,15 @@
+---
+- name: Deploy vsftpd
+  hosts: centos8-stream
+  tasks: 
+  - name: Install vsftpd
+    yum : name=vsftpd
+  - name: Enable vsftpd
+    service: name=vsftpd enabled=true
+  - name: create readme file
+    copy: 
+      content: "This is Billi's FTP Server" 
+      dest: /var/ftp/pub/README
+      force: no
+      mode: 0444
+...

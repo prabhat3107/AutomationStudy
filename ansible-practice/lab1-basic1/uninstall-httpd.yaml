@@ -1,0 +1,23 @@
+---
+- name: Uninstall httpd
+  hosts: centos8-stream
+  tasks: 
+    - name: Close firewall
+      firewalld: 
+        service: http
+        permanent: yes
+        state: disabled
+        immediate: yes
+    - name: Stop httpd service
+      systemd:
+        name: httpd
+        state: stopped 
+    - name: Remove index.html file
+      file:
+        path: /var/www/html/index.html
+        state: absent
+    - name: Uninstall httpd package
+      yum: 
+        name: httpd
+        state: absent
+...

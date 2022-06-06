@@ -1,0 +1,9 @@
+---
+- name: Demonstrate the register module
+  hosts: cos8s
+  tasks: 
+    - name: Run a commnad and show the output
+      command: 'ip  addr show'
+      register: command_result
+    - debug: 
+        var: command_result.stdout_lines

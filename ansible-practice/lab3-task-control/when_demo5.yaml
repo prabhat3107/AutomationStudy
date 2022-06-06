@@ -1,0 +1,15 @@
+- name: Demo if a variable is set
+  hosts: list2
+  vars:
+    billi: "Priya"
+  tasks:
+
+    - name: Run tasks if variable billi is set
+      shell: echo "I love {{ billi }}" 
+      when: billi is defined 
+
+    - name: Run tasks if vriable 'meow' is not set
+      debug: 
+        msg: " {{ billi }} is a 'meow'"
+      when: meow is undefined
+

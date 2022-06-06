@@ -1,0 +1,15 @@
+- name: Demo conditionals in loops
+  hosts: list1
+  vars: 
+    mylist: [ 0, 2, 4, 6, 7, 8 , 10 ]
+  tasks:
+    - name: Run when items greater than 5
+      debug:
+        msg: " item : {{ item }}"
+      loop: "{{ mylist }}"
+      when: item > 5
+    - name: Run when item list is defined 
+      debug:
+        msg: " item : {{ item }}"
+      loop: "{{ non_list|default([]) }}"
+      when: item > 5

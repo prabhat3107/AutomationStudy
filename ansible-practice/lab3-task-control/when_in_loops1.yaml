@@ -1,0 +1,19 @@
+- name: Demo conditionals in loops
+  hosts: list1
+  vars: 
+    billi:
+      - "Priya Billi"
+      - "Meow Billi"
+      - "Achi Billi"
+      - "Sundarsi Billi"
+  tasks:
+    - name: Run when items greater than 5
+      debug:
+        msg: " item : {{ item }}"
+      loop: [ 0, 2, 4, 6, 7, 8 , 10 ]
+      when: item > 5
+    - name: Itirate a loop variable 
+      debug: 
+        msg: " item : {{ item }}" 
+      loop: "{{ billi }}"
+      

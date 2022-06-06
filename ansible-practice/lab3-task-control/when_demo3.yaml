@@ -1,0 +1,21 @@
+---
+- name: Demo the status of register variables 
+  hosts: list2
+  tasks: 
+    - name: Register a variable, ignore errors and continue
+      command: /bin/true
+      register: result
+      ignore_errors: true
+      when: ansible_facts['os_family'] == "RedHat"
+    - name: Run only if the task that registered "result" fails
+      debug:
+        var: result
+      when: result is failed
+    - name: Run only if the task that registered "result" succeeds
+      debug:
+        var: result
+      when: result is succeeded
+    - name: Run only if the task that registered "resutl" is skipped
+      debug:
+        var: result
+      when: result is skipped

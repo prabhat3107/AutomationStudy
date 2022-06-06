@@ -1,0 +1,13 @@
+---
+- name: Demo of group vars
+  hosts: centos8-stream
+  vars:
+    web_package: httpd-plybk
+  tasks:
+    - name: This is the {{ web_package }} package
+      debug:
+        msg: "Installing {{ web_package }}"
+    - name: This is {{ web_service }} service
+      debug:
+        msg: "Starting {{ web_service }}" 
+...

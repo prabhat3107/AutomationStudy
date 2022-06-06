@@ -1,0 +1,10 @@
+---
+- name: Using Ansible Vault
+  hosts: all
+  vars_files: 
+    - vault.yaml
+  tasks:
+    - name: Read hsot
+      debug:
+        msg: "Reading from vault : {{ user_name }}" 
+...

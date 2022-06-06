@@ -1,0 +1,15 @@
+---
+- name: Conditional - demo of when 
+  hosts: all
+  vars: 
+  tasks: 
+    - name: Install vsftpd if sufficinet space on /var/ftp
+      yum: 
+        name: vsftpd 
+        state: latest
+      loop: "{{  ansible_facts['mounts'] }}"
+      when: 
+        - item.mount == "/" and item.size_available > 10000000
+        - ansible_facts['os_family'] == "RedHat"
+
+

@@ -1,0 +1,7 @@
+---
+- name: Test Playbook 
+  hosts: all
+  tasks: 
+    - name: Task1 
+      debug: 
+        msg: This is the debug module

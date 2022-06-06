@@ -1,0 +1,17 @@
+---
+- name: Demo of when with register variables
+  hosts: list2
+  tasks:
+    - name: Register  /etc/motd
+      shell: cat /etc/motd
+      register: motd_contents
+      when: ansible_facts['os_family'] == "RedHat"
+#    - name: Show the contents of /etc/motd
+#      debug:
+#        var: motd_contents
+    - name: Demonstrate when on the contents of /etc/motd
+      debug: 
+        msg:  "motd on {{ ansible_facts['hostname'] }} contains the word hi"
+      when: 
+        - ansible_facts['os_family'] == "RedHat"
+        - motd_contents.stdout.find('hi') != -1
