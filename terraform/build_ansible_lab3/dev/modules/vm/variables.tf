@@ -26,5 +26,18 @@ variable "vcneter_user_password" {
     description = "Password "
     type =  string
     sensitive = true
-    
+
+}
+
+variable "vsphere_datastore_name" {
+
+    description = "Name of the vshpere datastore where VM is parked"
+    default =  "datastore2"
+
+
+}
+
+variable "vm_network_name" {
+    description = "Name of the devfault virtual vsphere network"
+    default = "VMNet-G1"
 }
