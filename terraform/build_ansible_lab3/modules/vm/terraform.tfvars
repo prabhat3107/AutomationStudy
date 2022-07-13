@@ -19,4 +19,6 @@ vm_name = "alab-controller1"
 
 vsphere_project_folder_name="PBProject"
 vsphere_parent_folder_name="BilliMeow"
-password = "Beauty!123"
+
+vm_user_name = "prabhat"
+vm_user_password = "Beauty!123"
