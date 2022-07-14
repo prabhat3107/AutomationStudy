@@ -71,26 +71,110 @@ variable "vm_name" {
   
 }
 
-variable "vsphere_parent_folder_name" {
-
-    description = "Name of the patent folder name"
+variable "vm_user_name" {
+    description = "VM user name"
     type = string
-
+    default = "prabhat"
+    sensitive = true
   
 }
 
-variable "vsphere_project_folder_name" {
 
-    description = "Name of the Project folder name"
-    type = string
-  
-}
-
-variable "password" {
+variable "vm_user_password" {
 
     description = "VM user password"
     type = string
     default = "Beauty!123"
     sensitive = true
   
+}
+
+variable "vm_folder_path" {
+
+    description = "VM folder_path"
+    type = string
+  
+}
+
+
+variable "datastore_id" {
+    description = "Data store ID"
+    type = string 
+  
+}
+
+variable "resource_pool_id" {
+    description = "Resource Pool ID"
+    type = string 
+  
+}
+
+variable "guest_id" {
+    description = "template guest ID"
+    type = string 
+  
+}
+
+
+variable "firmware" {
+    description = "Firmware"
+    type = string 
+  
+}
+
+variable "network_id" {
+    description = "Network ID"
+    type = string 
+  
+}
+
+variable "vm_template_id" {
+
+    description = "Network ID"
+    type = string 
+  
+}
+
+variable "vm_ipv4_address" {
+
+    description = "VM ipv4 address"
+    type = string
+
+}
+
+variable "vm_ipv4_netmask" {
+
+    description = "VM ipv4 address"
+    type = number
+
+  
+}
+
+variable "dns_server_list" {
+
+    description = "VM ipv4 address"
+    type = list(string)
+
+  
+}
+variable "dns_suffix_list" {
+
+    description = "VM dns suffix list"
+    type = list(string)
+
+  
+}
+
+variable "vm_ipv4_gateway" {
+
+    description = "VM ipv4 gateway"
+    type = string
+
+}
+
+variable "vm_domain" {
+
+    description = "VM domain name"
+    type = string
+
 }
