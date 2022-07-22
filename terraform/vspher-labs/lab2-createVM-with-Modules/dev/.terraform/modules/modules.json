@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"create_vms","Source":"../modules/clone_vm","Dir":"../modules/clone_vm"},{"Key":"vm_path","Source":"../modules/vm-folder","Dir":"../modules/vm-folder"},{"Key":"","Source":"","Dir":"."}]}
