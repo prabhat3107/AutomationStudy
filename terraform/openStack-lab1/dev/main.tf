@@ -98,7 +98,7 @@ module "create_vms" {
   dns_server_list   = var.dns_server_list
   dns_suffix_list  = var.dns_suffix_list
   vm_ipv4_gateway  = var.vm_ipv4_gateway
-  #vm_user_name =  var.vm_user_name
-  #vm_user_password = var.vm_user_password
+  vm_user_name =  var.vm_user_name
+  vm_user_password = var.vm_user_password
 
 }
