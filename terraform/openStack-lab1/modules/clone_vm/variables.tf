@@ -159,3 +159,20 @@ variable "vm_nic_config" {
                 )
 }
 
+variable "vm_user_name" {
+    description = "VM user name"
+    type = string
+    default = "prabhat"
+    sensitive = true
+  
+}
+
+
+variable "vm_user_password" {
+
+    description = "VM user password"
+    type = string
+    default = "Beauty!123"
+    sensitive = true
+  
+}

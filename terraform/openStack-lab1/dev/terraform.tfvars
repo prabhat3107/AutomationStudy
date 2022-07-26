@@ -22,8 +22,8 @@ vm_template_name = "centos-stream-8.5-template"
 parent_project_folder_name="OpenStackLabs"
 project_folder_name="MultiNode-Lab1"
 
-#vm_user_name = "prabhat"
-#vm_user_password = "Beauty!123"
+vm_user_name = "prabhat"
+vm_user_password = "Beauty!123"
 
 vm_domain_name = "sriauronet.local"
 
