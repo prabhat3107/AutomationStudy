@@ -176,3 +176,11 @@ variable "vm_user_password" {
     sensitive = true
   
 }
+
+variable "provisioning_commands" {
+
+    description = "The list of commands to be executed after the VM hasbeen created"
+    type = list(string)
+    
+  
+}

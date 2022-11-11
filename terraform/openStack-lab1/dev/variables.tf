@@ -82,6 +82,12 @@ variable "vm_network_name_3" {
 }
 
 
+variable "vm_network_name_4" {
+    description = "Name of the devfault virtual vsphere network"
+    type = string
+    default = "ExternetlNet"
+}
+
 variable "vm_template_name" {
 
     description = "Name of the VM template to clone from "
@@ -112,6 +118,23 @@ variable "vm_list" {
                 )
 }
 
+variable "network_node_vm_list" {
+  description = "List of VM properties object"
+  type        = list(
+                    object({
+                            vm_name    = string
+                            vm_host_name     = string
+                            vm_num_cpus = number
+                            vm_memory = number
+                            vm_nic_config = list(
+                                                object({
+                                                        ipv4_address   = string
+                                                        ipv4_netmask     = string
+                                                    })
+                                                )                      
+                    })
+                )
+}
 
 
 //Common VM variables 
@@ -147,6 +170,13 @@ variable "vm_ipv4_gateway" {
     type = string
 
 }
+
+variable "vm_ipv4_gateway_2" {
+
+    description = "VM ipv4 gateway"
+    type = string
+
+}
 /*variable "vm_host_name" {
 
     description = "VM host name"
@@ -177,5 +207,13 @@ variable "vm_user_password" {
     type = string
     default = "Beauty!123"
     sensitive = true
+  
+}
+
+variable "provisioning_commands" {
+
+    description = "The list of commands to be executed after the VM hasbeen created"
+    type = list(string)
+    
   
 }

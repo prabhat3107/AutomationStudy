@@ -11,3 +11,5 @@ output "vm_ipaddress" {
     value = values(module.create_vms).*.ip_addresses
   
 }
+
+
