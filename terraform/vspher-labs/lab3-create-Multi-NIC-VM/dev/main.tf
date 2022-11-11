@@ -55,7 +55,7 @@ data "vsphere_network" "vm_network_3" {
  
 }
 
-data "vsphere_virtual_machine" "vm_template" {
+  data "vsphere_virtual_machine" "vm_template" {
   name          = var.vm_template_name
   datacenter_id = data.vsphere_datacenter.dc_name.id
 } 
@@ -69,6 +69,7 @@ module "vm_path" {
 }
 
 module "create_vms" {
+
 
   source = "../modules/clone_vm"
   for_each = { for vm in var.vm_list: vm.vm_name => vm}

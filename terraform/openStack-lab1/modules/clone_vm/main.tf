@@ -83,20 +83,7 @@ dynamic network_interface {
   }
   provisioner "remote-exec" {
 
-    inline = [
-      "echo ${var.vm_user_password} | sudo -S dnf update -y",
-      "echo ${var.vm_user_password} | sudo -S dnf config-manager --enable powertools",
-      "echo ${var.vm_user_password} | sudo -S dnf install -y centos-release-openstack-yoga",
-      "echo ${var.vm_user_password} | sudo -S dnf update -y",
-      "echo ${var.vm_user_password} | sudo -S dnf install -y openstack-packstack",
-      "echo ${var.vm_user_password} | sudo -S dnf install -y network-scripts",
-      "echo ${var.vm_user_password} | sudo -S systemctl disable firewalld",
-      "echo ${var.vm_user_password} | sudo -S systemctl stop firewalld",
-      "echo ${var.vm_user_password} | sudo -S systemctl disable NetworkManager",
-      "echo ${var.vm_user_password} | sudo -S systemctl stop NetworkManager",
-      "echo ${var.vm_user_password} | sudo -S systemctl enable network",
-      "echo ${var.vm_user_password} | sudo -S systemctl start network"
-    ]
+    inline = var.provisioning_commands
 
   }
 }

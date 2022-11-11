@@ -34,7 +34,7 @@ vm_list = [
     {
         vm_name = "alab-controller1"
         vm_host_name = "alab-controller1"
-        vm_ipv4_address = "10.1.1.200"
+        vm_ipv4_address = "10.1.1.240"
         vm_template_name = "userver-22.04-lts-template"
 
     },
@@ -42,21 +42,21 @@ vm_list = [
     {
         vm_name = "alab-pb1"
         vm_host_name = "alab-userver1"
-        vm_ipv4_address = "10.1.1.201"
+        vm_ipv4_address = "10.1.1.241"
         vm_template_name = "userver-22.04-lts-template"
 
     },
     {
         vm_name = "alab-pb2"
         vm_host_name = "alab-userver2"
-        vm_ipv4_address = "10.1.1.202"
+        vm_ipv4_address = "10.1.1.242"
         vm_template_name = "userver-22.04-lts-template"
 
     },
     {
         vm_name = "alab-pb3"
         vm_host_name = "alab-userver3"
-        vm_ipv4_address = "10.1.1.203"
+        vm_ipv4_address = "10.1.1.243"
         vm_template_name = "userver-22.04-lts-template"
 
     },
@@ -64,7 +64,7 @@ vm_list = [
     {
         vm_name = "alab-pb4"
         vm_host_name = "alab-userver4"
-        vm_ipv4_address = "10.1.1.204"
+        vm_ipv4_address = "10.1.1.244"
         vm_template_name = "userver-22.04-lts-template"
 
     }

@@ -1,0 +1,22 @@
+#simple key value pairs.
+# thsi is a comment line starting with a #
+
+#key value pair 
+app: user-authentication
+port: 9000
+version: 1.7
+
+#Object is a set of key value pairs
+
+microservices: 
+  - app: user-authentication
+    port: 9000
+    version: 1.7
+  - app: shopping-cart
+    port: 9002
+    versionss: 
+      - 1.9
+      - 1.2
+      - 2.4
+      
+

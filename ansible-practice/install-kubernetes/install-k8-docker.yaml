@@ -1,0 +1,269 @@
+---
+
+#https://www.linuxsysadmins.com/install-kubernetes-cluster-with-ansible/
+- name: Install Docker Engiine and Kubernetes
+  hosts: all
+  tasks:
+
+    - name: Swapp off 
+      command: swapoff -a
+
+    - name: Remove Swap entry from /etc/fstab
+      lineinfile:
+        dest: /etc/fstab
+        regexp: swap
+        state: absent
+
+    - name: Enable kernel moduels
+      command: "{{ item }}"
+      with_items:
+        - modprobe overlay
+        - modprobe br_netfilter
+    - name: Add sysctl settings
+      copy:
+        dest: /etc/sysctl.d/kubernetes.conf
+        content: |
+          net.bridge.bridge-nf-call-ipv6tables = 1
+          net.bridge.bridge-nf-call-iptables = 1
+          net.ipv4.ip_forward =1 
+
+    - name: Apply sysctl changes 
+      command: sysctl --system    
+
+
+    - name: Preapre for Kubernetes and Docker installation 
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg: 
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - apt-transport-https
+          - software-properties-common
+          - git
+          - wget
+          - vim
+
+        state: present
+
+    - name: Iinstale Docker official gpg key
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/trusted.gpg.d/docker.asc
+
+    - name: Install Docker repo
+      ansible.builtin.apt_repository: 
+        repo: "deb [signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/ubuntu/ {{ ansible_distribution_release }} stable"
+        state: present
+
+
+    - name: Install docker packages
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: Create daemon json config file for Docker
+      copy: 
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "exec-opts": ["native.cgroupdirver=systemd"],
+            "log-driver": "json-file",
+            "log-opts": {
+              "max-size": "100m"
+            },
+            "storage-driver": "overlay2"
+          }
+
+    - name: Enable docker service 
+      service: 
+        name: docker
+        enabled: yes
+
+    - name: Find latest versioin for  cri-dockerd 
+      uri:
+        url: https://api.github.com/repos/Mirantis/cri-dockerd/releases/latest
+        method: GET
+        return_content: yes
+        status_code: 200
+        body_format: json
+      register: page_content
+  
+
+    - name: set cri_dockerd_verson
+      set_fact: 
+        cri_dockerd_verson: "{{ page_content.json.tag_name | replace('v','') }}"
+
+    - name: get cri-dockerd
+      get_url: 
+        #url: wget https://github.com/Mirantis/cri-dockerd/releases/download/v${VER}/cri-dockerd-${VER}.amd64.tgz
+        url: https://github.com/Mirantis/cri-dockerd/releases/download/{{page_content.json.tag_name}}/cri-dockerd-{{cri_dockerd_verson}}.amd64.tgz
+        dest: /tmp
+
+    - name: extract cir-dockerd
+      unarchive: 
+        remote_src: yes
+        src: /tmp/cri-dockerd-{{cri_dockerd_verson}}.amd64.tgz
+        dest: /tmp
+
+    - name: install cri-dockerd
+      copy:
+        remote_src: yes
+        src: /tmp/cri-dockerd/cri-dockerd
+        dest: /usr/local/bin/cri-dockerd
+        mode: '0755'
+
+    - name: get cri-dockerd systemd 
+      get_url:
+        url: https://raw.githubusercontent.com/Mirantis/cri-dockerd/master/packaging/systemd/{{ item }}
+        dest: /etc/systemd/system/
+      with_items:
+        - cri-docker.service
+        - cri-docker.socket
+
+    - name: update cir-dockerd service config
+      ansible.builtin.replace:
+        path: /etc/systemd/system/cri-docker.service
+        regexp: '/usr/bin/cri-dockerd'
+        replace: '/usr/local/bin/cri-dockerd'
+    
+    - name: enable cri-docker services 
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        name: "{{ item }}"
+      with_items:
+        - cri-docker.service
+        - cri-docker.socket
+  
+    - name: Configure Persistent loading of moduels
+      copy: 
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          overlay
+          br_netfilter
+    - name: Enable kernel moduels
+      command: "{{ item }}"
+      with_items:
+        - modprobe overlay
+        - modprobe br_netfilter
+
+
+    - name: Get Kubernetes repo gpg key
+      get_url: 
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+    - name: Install Kubernetes repo
+      ansible.builtin.apt_repository: 
+        repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+        state: present
+        
+    - name: Install kubernetes packages 
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg: 
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+
+    - name: Enable service kubelet persistently
+      service: 
+        name: kubelet
+        enabled: yes
+    
+    - name: Reboot all the kubernetes nodes
+      reboot: 
+        post_reboot_delay: 10
+        reboot_timeout: 90
+        connect_timeout: 120
+        test_command: uptime
+
+- name: Initialize Kubernetes Control node 
+  hosts: controlNode1
+  vars:
+    cri_socket: unix:///var/run/cri-dockerd.sock
+    ctrl_plane_ep: k8s-cluster.sriauronet.local
+    pod_network: 10.244.0.0/16
+  tasks:
+    - name: start kubelet service
+      systemd: 
+        name: kubelet
+        state: started
+        enabled: true
+    - name: pull container images
+      shell: kubeadm config images pull --cri-socket {{ cri_socket }} >> image_pull_out.txt 
+      args: 
+        chdir: $HOME
+        creates: image_pull_out.txt 
+    - name: Initialize first control node 
+      shell: kubeadm init --pod-network-cidr={{ pod_network }} --cri-socket {{ cri_socket }} --upload-certs --control-plane-endpoint={{ ctrl_plane_ep }} >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+      
+    - name: create .kube directory
+      become: yes
+      become_user: prabhat
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/prabhat/.kube/config
+        remote_src: yes
+        owner: prabhat
+
+    - name: install pod pod_network 
+      become: yes
+      become_user: prabhat
+      shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
+      args:
+          chdir: $HOME
+          creates: pod_network_setup.txt
+    - name: get join command
+      shell: kubeadm token create --print-join-command
+      register: join_command_raw
+
+    - name: set join command
+      set_fact:
+        join_command: "{{ join_command_raw.stdout_lines[0] }} --cri-socket {{ cri_socket }}" 
+
+    - name: check the status of the cluster
+      become: yes
+      become_user: prabhat
+      shell: kubectl cluster-info
+      register: cluster_info_output
+
+    - name: check the status of network pod
+      become: yes
+      become_user: prabhat
+      shell: kubectl get pods -n kube-flannel
+      register: pod_info_output
+
+    - name: check the status of node
+      become: yes
+      become_user: prabhat
+      shell: kubectl get nodes -o wide
+      register: node_info_output
+
+    - name: show the install status 
+      ansible.builtin.debug:
+        var: "{{ item }}"
+      with_items: 
+        - cluster_info_output
+        - pod_info_output
+        - node_info_output
+
+
+...
