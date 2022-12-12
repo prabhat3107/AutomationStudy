@@ -1,0 +1,13 @@
+[all]
+nginx-lb.sriauronet.local
+server-node1.sriauronet.local
+server-node2.sriauronet.local
+server-node3.sriauronet.local
+
+[serverNodes]
+server-node1.sriauronet.local
+server-node2.sriauronet.local
+server-node3.sriauronet.local
+
+[lbNodes]
+nginx-lb.sriauronet.local
