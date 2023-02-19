@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-demo
+  labels:
+    app: nginx-rd
+spec:
+  selector:
+    matchLabels:
+      app: nginx-rd
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: nginx-rd
+    spec:
+      containers:
+      - name: nginx-ws
+        image: nginx:1.8.1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

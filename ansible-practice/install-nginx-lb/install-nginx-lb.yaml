@@ -1,0 +1,93 @@
+---
+
+#https://www.linuxsysadmins.com/install-kubernetes-cluster-with-ansible/
+- name: Install A LAB to try and test nginx as loadbalancer
+  hosts: all
+  tasks:
+
+    - name: Install nginx system  
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg: 
+          - nginx
+        state: present
+    - name: Start nginx service 
+      ansible.builtin.systemd:
+        name: nginx.service
+        state: started
+        enabled: yes
+
+- name: Configure nginx webserver nodes 
+  hosts: serverNodes
+  tasks:
+    - name: Create html directory
+      ansible.builtin.file:
+        path: /usr/share/nginx/html/{{ ansible_hostname }}
+        state: directory
+        mode: 0755
+    - name: Disable the default site
+      ansible.builtin.file: 
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Copy the Index page
+      template: 
+        src: index.html.j2
+        dest: /usr/share/nginx/html/{{ ansible_hostname }}/index.html
+        mode: 0775
+
+    - name: Configure webserver
+      copy:
+        dest: /etc/nginx/conf.d/{{ ansible_hostname }}.conf
+        content: |
+           server {
+              listen 80;
+              server_name {{ ansible_hostname }};
+              location / {
+                root /usr/share/nginx/html/{{ ansible_hostname }};
+                index index.html;
+              }
+            }
+          
+    - name: resart nginx service 
+      ansible.builtin.systemd:
+        name: nginx.service
+        state: restarted
+        enabled: yes
+
+    
+- name: Configure NGINX LB Server 
+  hosts: lbNodes
+  tasks:
+
+    - name: Disable the default site
+      ansible.builtin.file: 
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+
+    - name: Configure lb
+      copy:
+        dest: /etc/nginx/conf.d/sriauronet.conf
+        content: |
+            upstream nginx-lb {
+              server server-node1.sriauronet.local;
+              server server-node2.sriauronet.local;
+              server server-node3.sriauronet.local;
+            }
+            server {
+              listen 80;
+              
+              location / {
+                proxy_pass http://nginx-lb;
+              }
+            }
+
+    - name: resart nginx service 
+      ansible.builtin.systemd:
+        name: nginx.service
+        state: restarted
+        enabled: yes
+
+
+...

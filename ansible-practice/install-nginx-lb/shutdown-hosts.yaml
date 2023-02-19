@@ -1,0 +1,8 @@
+---
+- name: Shutdown all hosts
+  hosts: all
+  tasks:
+    - name: Dealy 60s before Shutdown
+      command: /usr/sbin/shutdown -h +1
+        
+...
