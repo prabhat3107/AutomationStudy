@@ -45,4 +45,6 @@ centos9-1
 centos9-2
 centos9-3
 
-
+[webservers]
+ansbl-controller1
+ansbl-controller2

@@ -1,0 +1,5 @@
+---
+## Author : Prabhat Pradhan
+## Deomonstration of Playbook in Ansible
+## This playbook installes nginx 
+- name: Configure webserver with nginx

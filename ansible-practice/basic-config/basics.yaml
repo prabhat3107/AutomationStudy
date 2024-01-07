@@ -1,0 +1,56 @@
+---
+#comment in YAML start with a # and apply till end of the line as like python, bash etc. 
+# Like python, YAML uses space indentation to reduce number of interpucutation characters. 
+# as a starndard two spaces are used as in pythohn. 
+# white space is used between each task in a playbook, and between sections in files.
+
+# Ansible stings need not be between quoats even if there are spaces in between. 
+# in some scenarios we need to quoate them. 
+# Double-quoting typically involves use of variable interpolations or other expressions. 
+# single-quoting users for lieral values that should not be evaluated. 
+# Boolean vlues must not be put in quoataion. 
+
+# Valid Booleans in YAML
+
+# true, True, TRUE, yes, Yes, YES, on, On, ON
+#false, Flse, FALSE, no, No, NO, off, Off, OFF
+
+# YAML Lists
+
+# indent list items and delimit them with hyphens. List have a name followed by a collon, as follows
+
+shows: 
+  - My Fair Lady
+  - Oklahoma
+  - The Priates of Penzance
+
+# Yaml also supports for inline format of lists 
+
+shows1: [ My Billi, Achi Billi, Beautiful Billi ]
+
+# Yaml Dictionaries. 
+
+address: 
+  street: Pavonia Avneue
+  appt: 831
+  city: Jersey city
+  state: New Jersey
+
+# Yaml also supports inline format of Dictionary 
+
+address2: { street: Newark Avenue, appt: 645, city: Jersey City, state: New Jersey }
+
+# multi line string 
+
+address3:
+  visiting_address: |+
+    Depart ment of Computer SCience
+    A.V. Williams Buildiing
+    University of Maryland
+  city: College Park
+  state: Maryland
+
+
+
+
+...
