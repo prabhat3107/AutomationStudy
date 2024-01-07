@@ -1,0 +1,48 @@
+
+## Ansible lab ##
+#
+#10.10.1.121 ansbl-controller1.sriauronet.lan ansbl-controller1
+#10.10.1.122 ansbl-controller2.sriauronet.lan ansbl-controller2
+#10.10.1.131 userver22-04-1.sriauronet.lan userver22-04-1
+#10.10.1.132 userver22-04-2.sriauronet.lan userver22-04-2
+#10.10.1.133 userver22-04-3.sriauronet.lan userver22-04-3
+#10.10.1.134 userver20-04-1.sriauronet.lan userver20-04-1
+#10.10.1.135 userver20-04-2.sriauronet.lan userver20-04-2
+#10.10.1.136 userver20-04-3.sriauronet.lan userver20-04-3
+#10.10.1.137 centos9-1.sriauronet.lan centos9-1
+#10.10.1.138 centos9-2.sriauronet.lan centos9-2
+#10.10.1.139 centos9-3.sriauronet.lan centos9-3
+
+[all]
+ansbl-controller1
+ansbl-controller2
+userver22-04-1
+userver22-04-2
+userver22-04-3
+userver20-04-1
+userver20-04-2
+userver20-04-3
+centos9-1
+centos9-2
+centos9-3
+
+[controllers]
+ansbl-controller1
+ansbl-controller2
+
+[ubuntu22]
+userver22-04-1
+userver22-04-2
+userver22-04-3
+
+[ubuntu20]
+userver20-04-1
+userver20-04-2
+userver20-04-3
+
+[centos9]
+centos9-1
+centos9-2
+centos9-3
+
+
