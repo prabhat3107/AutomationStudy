@@ -1,5 +1,36 @@
 ---
 ## Author : Prabhat Pradhan
 ## Deomonstration of Playbook in Ansible
-## This playbook installes nginx 
+## This playbook installes nginx
 - name: Configure webserver with nginx
+  hosts: webservers
+  become: true
+  become_user: root
+  tasks:
+    - name: Ensure nginx is installed
+      package:
+        name: nginx
+        state: present
+        update_cache: true
+    - name: Copy nginx config file
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+        mode: 0644
+
+    - name: Enable configuration
+      file: >
+        dest=/etc/nginx/sites-enabled/default
+        src=/etc/nginx/sites-available/default
+        state=link
+
+    - name: Copy  index.html
+      template: >
+        src=index.html.j2
+        dest=/user/share/nginx/html/index.html
+        mode=0644
+
+    - name: Restart nginx
+      service: name=nginx state=restarted
+
+...
