@@ -1,17 +1,3 @@
-terraform {
-  required_version = "~> 1.0" # Ensure that the Terraform version is 1.0 or higher
-
-  required_providers {
-    aws = {
-      source = "hashicorp/aws" # Specify the source of the AWS provider
-      version = "~> 5.0"        # Use a version of the AWS provider that is compatible with version
-    }
-  }
-}
-
-provider "aws" {
-  region = "us-east-1" # Set the AWS region to US East (N. Virginia)
-}
 
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
@@ -27,7 +13,7 @@ resource "aws_instance" "aws_example" {
     "${aws_security_group.sg_http.id}"
   ]
 
-  key_name = "pp_terraform_ssh_key"
+  key_name = "aws_key"
 
   user_data = <<-EOF
               #!/bin/bash
@@ -38,6 +24,11 @@ resource "aws_instance" "aws_example" {
   tags = {
     Name = "ExampleInstance" # Tag the instance with a Name tag for easier identification
   }
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "aws_key"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcP4/KtKVJQAfkWTjIoAwHbDPxt+tUZCMndZ55Y0SEd prabhat@Abhipsa.local"
 }
 
 resource "aws_security_group" "sg_ssh" {
@@ -70,7 +61,4 @@ resource "aws_security_group" "sg_http" {
     cidr_blocks = ["0.0.0.0/0"]
 
   }
-}
-output "public_ip" {
-   value = "${aws_instance.aws_example.public_ip}"
 }
