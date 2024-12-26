@@ -19,6 +19,12 @@ variable "server_port" {
   default     = 8090
 }
 
+variable "node_count" {
+  description = "Number of nodes to create"
+  type        = number
+  default     = 5
+}
+
 resource "aws_instance" "pp_linux_instance" {
   ami                    = "ami-0e2c8caa4b6378d8c"
   instance_type          = "t2.micro"
@@ -51,6 +57,6 @@ resource "aws_security_group" "terraform_instances" {
   }
 }
 
-output "public_ip" {
-  value = "${aws_instance.pp_linux_instance.public_ip}"
-}
+# output "public_ip" {
+#   value = "${aws_instance.pp_linux_instance.public_ip}"
+# }
