@@ -1,0 +1,33 @@
+#cloud-config-mkdocs-system
+
+groups:
+  - ubuntu: [root,sys]
+  - dpro42-group
+
+users:
+  - default
+  - name: spiderman
+    gecos: Prabhat Pradhan aka Peter Parker
+    shell: /bin/bash
+    primary_group: dpro42-group
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWLXTR+dNmSNGkP8thSgN9w3alK/GqFPfr6LT1twn7Q prabhat3107@gmail.com
+
+runcmd:
+  - touch /home/spiderman/hello.txt
+  - echo "Hello! You have reached PP's Billi World! Here beautiful flowers of Love blosem on the bedrock of sceptisism and disbilief" > /home/spiderman/hello.txt
+  - sudo apt-get update
+  - sudo apt install apache2 -q -y
+  - sudo apt install python3-pip -y
+  - sudo apt install mkdocs -y
+  - sudo mkdir /home/spiderman/mkdocs
+  - cd /home/spiderman/mkdocs
+  - sudo mkdocs new mkdocs-project
+  - cd mkdocs-project
+  - sudo mkdocs build
+  - sudo rm /var/www/html/index.html
+  - sudo cp -R site/* /var/www/html
+  - sudo systemctl restart apache2
