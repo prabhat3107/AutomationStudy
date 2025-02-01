@@ -57,6 +57,6 @@ resource "aws_security_group" "terraform_instances" {
   }
 }
 
-# output "public_ip" {
-#   value = "${aws_instance.pp_linux_instance.public_ip}"
-# }
+output "public_ip" {
+   value = "${aws_instance.pp_linux_instance.public_ip}"
+}
