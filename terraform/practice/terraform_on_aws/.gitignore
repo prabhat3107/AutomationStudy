@@ -3,3 +3,5 @@ terraform.tfstate*
 terraform.tfstate.backup
 aws_key
 aws_key.pub
+my_aws_key
+my_aws_key.pub
