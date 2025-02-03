@@ -1,4 +1,4 @@
-resource "aws_instance" "lession_05" {
+resource "aws_instance" "ec2i_lession_05" {
   ami           = "ami-0e2c8caa4b6378d8c"
   instance_type   = "t2.micro"
   key_name       = "my_aws_key"
