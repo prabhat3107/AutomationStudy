@@ -15,11 +15,11 @@
 
     - name: Filter files within the date range
       ansible.builtin.set_fact:
-        matched_files: "{{ found_files.files | selectattr('mtime', 'ge', start_epoch) | selectattr('mtime', 'le', end_epoch) | list }}"
+        # Enforce that start_epoch and end_epoch are interpreted strictly as numbers
+        matched_files: "{{ found_files.files | selectattr('mtime', 'ge', start_epoch | int) | selectattr('mtime', 'le', end_epoch | int) | list }}"
       vars:
-        # CORRECTED: Use Python's .strftime('%s') method directly on the datetime object
-        start_epoch: "{{ (start_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') | int }}"
-        end_epoch: "{{ (end_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') | int }}"
+        start_epoch: "{{ (start_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') }}"
+        end_epoch: "{{ (end_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') }}"
 
     - name: Mark server as patched if matching files exist
       ansible.builtin.set_fact:
