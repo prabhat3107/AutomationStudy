@@ -1,6 +1,11 @@
 ---
-- name: Check kernel patch
-  hosts: cos9
+- name: Filter loader entries and mark servers as patched
+  hosts: all
+  become: true
+  vars:
+    start_date: "2026-09-01 00:00:00"
+    end_date: "2026-09-07 23:59:59"
+
   tasks:
     - name: Find all files in the loader entries directory
       ansible.builtin.find:
@@ -8,9 +13,26 @@
         file_type: file
       register: found_files
 
-    - name: Print file paths and modification times
+    - name: Filter files within the date range
+      ansible.builtin.set_fact:
+        matched_files: "{{ found_files.files | selectattr('mtime', 'ge', start_epoch) | selectattr('mtime', 'le', end_epoch) | list }}"
+      vars:
+        start_epoch: "{{ start_date | to_datetime('%Y-%m-%d %H:%M:%S') | date('strftime', '%s') | int }}"
+        end_epoch: "{{ end_date | to_datetime('%Y-%m-%d %H:%M:%S') | date('strftime', '%s') | int }}"
+
+    - name: Mark server as patched if matching files exist
+      ansible.builtin.set_fact:
+        is_patched: "{{ matched_files | length > 0 }}"
+
+- name: Print patched servers summary
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Display list of patched servers
       ansible.builtin.debug:
-        msg: "File: {{ item.path }} | Modified: {{ '%Y-%m-%d %H:%M:%S' | strftime(item.mtime) }}"
-      loop: "{{ found_files.files }}"
-      loop_control:
-        label: "{{ item.path }}"
+        msg: >-
+          Patched Servers: {{ hostvars | dict2items 
+          | selectattr('value.is_patched', 'defined') 
+          | selectattr('value.is_patched', 'equalto', true) 
+
+          | map(attribute='key') | list }}
