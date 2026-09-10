@@ -17,8 +17,9 @@
       ansible.builtin.set_fact:
         matched_files: "{{ found_files.files | selectattr('mtime', 'ge', start_epoch) | selectattr('mtime', 'le', end_epoch) | list }}"
       vars:
-        start_epoch: "{{ start_date | to_datetime('%Y-%m-%d %H:%M:%S') | date('strftime', '%s') | int }}"
-        end_epoch: "{{ end_date | to_datetime('%Y-%m-%d %H:%M:%S') | date('strftime', '%s') | int }}"
+        # CORRECTED: Use Python's .strftime('%s') method directly on the datetime object
+        start_epoch: "{{ (start_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') | int }}"
+        end_epoch: "{{ (end_date | to_datetime('%Y-%m-%d %H:%M:%S')).strftime('%s') | int }}"
 
     - name: Mark server as patched if matching files exist
       ansible.builtin.set_fact:
