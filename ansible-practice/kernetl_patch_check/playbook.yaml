@@ -1,6 +1,6 @@
 ---
 - name: Check kernel patch
-  hosts: cos8
+  hosts: cos9
   tasks:
     - name: Find all files in the loader entries directory
       ansible.builtin.find:
