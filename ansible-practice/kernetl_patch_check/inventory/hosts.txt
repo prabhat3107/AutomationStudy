@@ -1,0 +1,13 @@
+[all]
+node1.sriauronet.lan
+node2.sriauronet.lan
+node3.sriauronet.lan
+node4.sriauronet.lan
+node5.sriauronet.lan
+
+
+[cos9]
+node4.sriauronet.lan
+node5.sriauronet.lan
+
+
