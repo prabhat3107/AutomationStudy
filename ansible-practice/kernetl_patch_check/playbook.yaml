@@ -1,6 +1,6 @@
 ---
 - name: Filter loader entries and mark servers as patched
-  hosts: all
+  hosts: cos9
   become: true
   vars:
     start_date: "2026-09-01 00:00:00"
