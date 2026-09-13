@@ -7,7 +7,7 @@
     - name: Get Active Items
       ansible.builtin.shell:
         cmd: /home/prabhat/get_value.sh
-        register: active_items
+      register: active_items
 
     - name: Print Active Items
       debug:
