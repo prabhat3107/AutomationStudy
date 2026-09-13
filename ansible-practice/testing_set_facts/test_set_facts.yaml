@@ -1,0 +1,14 @@
+---
+- name: Test set facts
+  hosts: all
+
+
+  tasks:
+    - name: Get Active Items
+      ansible.builtin.shell:
+        cmd: /home/prabhat/get_values.sh
+        register: active_items
+
+    - name: Print Active Items
+      debug:
+        var: active_items.stdout_lines
