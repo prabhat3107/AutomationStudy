@@ -11,4 +11,4 @@
 
     - name: Print Active Items
       debug:
-        var: active_items.stdout_lines
+        var: active_items
