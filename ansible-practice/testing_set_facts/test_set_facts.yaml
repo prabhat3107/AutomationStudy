@@ -16,7 +16,7 @@
 
     - name: Set Fact
       ansible.builtin.set_fact:
-        active_item_count: "{{ active_items.stdout }}"
+        active_item_count: {{ active_items.stdout }}
 
     - name: Get All the active_items
       debug:
