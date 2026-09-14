@@ -20,4 +20,4 @@
 
     - name: Get All the active_items
       debug:
-        var: ansible_facts[active_item_count]
+        var: ansible_facts['active_item_count']
