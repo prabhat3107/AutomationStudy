@@ -21,13 +21,17 @@
         all_counts: "{{ ansible_play_hosts | map('extract', hostvars, 'item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ ansible_play_hosts | length }}"
-        average_count: "{{ total_sum | int / host_count | int }}"
+      average_count: "{{ total_sum | int / host_count | int }}"
       debug:
         msg:
           - "All counts collected: {{ all_counts }}"
           - "Total Sum: {{ total_sum }}"
           - "Total Hosts: {{ host_count }}"
           - "Average Item Count: {{ average_count }}"
+
+    - name: show average count
+      debug:
+        msg: "Average Item Count: {{ average_count }}"
 
     - name: Set average_count as a fact on all inventory hosts
       set_fact:
@@ -36,4 +40,4 @@
 
     - name: Verify the new fact on each host
       debug:
-        msg: "Host {{ inventory_hostname }} now has average_count set to {{ hostvars[inventory_hostname]['shared_average_count'] }}"
+        msg: "Host {{ inventory_hostname }} now has average_count set to {{ hostvars[inventory_hostname].shared_average_count }}"
