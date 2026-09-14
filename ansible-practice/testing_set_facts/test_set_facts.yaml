@@ -19,4 +19,4 @@
         active_item_count: "{{ active_items.stdout }}"
     - name: Print the custom facts of the host
       ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
+        var: hostvars[inventory_hostname].active_item_count
