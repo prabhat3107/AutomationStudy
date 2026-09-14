@@ -1,0 +1,44 @@
+---
+- name: Set facts and calculate average
+  hosts: cos9   # Replace with your actual inventory group or 5 hosts
+  gather_facts: false
+
+
+  tasks:
+    - name: Dynamically create 5 dummy hosts in memory
+      add_host:
+        name: "{{ item }}"
+        groups: target_hosts
+      loop: "{{ ansible_playbook_hosts }}"
+
+- name: Perform calculations on target hosts
+  hosts: target_hosts
+  gather_facts: false
+  tasks:
+    - name: Set random item_count for each host
+      set_fact:
+        item_count: "{{ [10, 20, 30, 40, 50] | random }}"
+
+    - name: Show the item_count for each host
+      debug:
+        msg: "Host {{ inventory_hostname }} has {{ item_count }} items."
+
+- name: Calculate and display the average
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Extract all item_counts and calculate average
+      vars:
+        # 1. Map over all target hosts to get their 'item_count' fact
+        # 2. Convert values to integers
+        # 3. Sum them up and divide by the total number of hosts
+        all_counts: "{{ groups['target_hosts'] | map('extract', hostvars, 'item_count') | map('int') | list }}"
+        total_sum: "{{ all_counts | sum }}"
+        host_count: "{{ groups['target_hosts'] | length }}"
+        average_count: "{{ total_sum | int / host_count | int }}"
+      debug:
+        msg:
+          - "All counts: {{ all_counts }}"
+          - "Total Sum: {{ total_sum }}"
+          - "Total Hosts: {{ host_count }}"
+          - "Average Item Count: {{ average_count }}"
