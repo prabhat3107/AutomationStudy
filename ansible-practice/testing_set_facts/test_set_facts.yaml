@@ -17,7 +17,11 @@
     - name: Set Fact
       ansible.builtin.set_fact:
         active_item_count: "{{ active_items.stdout }}"
+    - name: Set multiple custom facts
+      ansible.builtin.set_fact:
+        environment_type: "production"
+        app_version: "1.4.2"
 
-    - name: Get All the active_items
-      debug:
+    - name: Print all host facts (including custom ones)
+      ansible.builtin.debug:
         var: ansible_facts
