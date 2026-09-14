@@ -1,0 +1,19 @@
+---
+- name: Set facts and calculate average
+  hosts: all               # Target your 5 hosts here
+  gather_facts: false
+  tasks:
+    - name: set current date time
+      set_fact:
+        current_time: "{{ now(utc=true, fmt='%Y-%m-%d %H:%M:%S') }}"
+    - name: Set variable for 7 days ago
+      ansible.builtin.set_fact:
+        past_date: "{{ (now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S') }}"
+
+    - name: Print current date time
+      debug:
+        msg: "{{ hostvars[inventory_hostname].current_time }}"
+
+    - name: Print past date
+      debug:
+        msg: "{{ hostvars[inventory_hostname].past_date }}"
