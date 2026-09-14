@@ -1,0 +1,16 @@
+  hostvars[inventory_hostname]:
+    active_item_count: '12000'
+    active_items:
+      changed: false
+      cmd: /home/prabhat/get_value.sh
+      delta: '0:00:00.015127'
+      end: '2026-09-14 01:50:31.636889'
+      failed: false
+      msg: ''
+      rc: 0
+      start: '2026-09-14 01:50:31.621762'
+      stderr: ''
+      stderr_lines: []
+      stdout: '12000'
+      stdout_lines:
+      - '12000'
