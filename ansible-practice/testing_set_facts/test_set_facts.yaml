@@ -8,7 +8,15 @@
       ansible.builtin.shell:
         cmd: /home/prabhat/get_value.sh
       register: active_items
+      changed_when: false
 
     - name: Print Active Items
       debug:
         var: active_items.stdout
+
+    - name: Set Fact
+      set_fact:
+        active_item_count: "{{ active_items.stdout }}"
+    - name: Get All the active_items
+      debug:
+        var: "{{ ansible_facts }}"
