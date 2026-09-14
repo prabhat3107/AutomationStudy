@@ -2,6 +2,8 @@
 - name: Set facts and calculate average
   hosts: all               # Target your 5 hosts here
   gather_facts: false
+  vars:
+    average_count: ""
   tasks:
     - name: Set a unique item_count for each host
       set_fact:
@@ -26,10 +28,12 @@
           - "Total Sum: {{ total_sum }}"
           - "Total Hosts: {{ host_count }}"
           - "Average Item Count: {{ average_count }}"
-    - name: Set the average item count to a fact
-      set_fact:
-        average_item_count: "{{ average_count }}"
 
-    - name: Display the average item count
+    - name: Set average_count as a fact on all inventory hosts
+      set_fact:
+        # Every host reads the 'shared_average' fact from the host that calculated it
+        shared_average_count: "{{ average_count  }}"
+
+    - name: Verify the new fact on each host
       debug:
-        msg: "Average Item Count: {{ hostvars.average_item_count }}"
+        msg: "Host {{ inventory_hostname }} now has average_count set to {{ hostvars[inventory_hostname]['shared_average_count'] }}"
