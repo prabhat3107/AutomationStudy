@@ -1,0 +1,34 @@
+---
+- name: Set facts and calculate average
+  hosts: all               # Target your 5 hosts here
+  gather_facts: false
+
+  tasks:
+    - name: Set a unique item_count for each host
+      set_fact:
+        item_count: "{{ (ansible_play_hosts.index(inventory_hostname) + 1) * 10 }}"
+
+    - name: Display individual host counts
+      debug:
+        msg: "Host {{ inventory_hostname }} has item_count = {{ item_count }}"
+
+    - name: Extract facts and calculate average
+      run_once: true       # Run this task exactly once
+      delegate_to: localhost # Execute the calculation on the control machine
+      vars:
+        # Using ansible_play_hosts correctly grabs the 5 target hosts from this play
+        all_counts: "{{ ansible_play_hosts | map('extract', hostvars, 'item_count') | map('int') | list }}"
+        total_sum: "{{ all_counts | sum }}"
+        host_count: "{{ ansible_play_hosts | length }}"
+      set_fact:
+        # Saving the calculated average to a temporary variable on the control host
+        shared_average: "{{ total_sum | int / host_count | int }}"
+
+    - name: Set average_count as a fact on all inventory hosts
+      set_fact:
+        # Every host reads the 'shared_average' fact from the host that calculated it
+        average_count: "{{ hostvars[ansible_play_hosts[0]]['shared_average'] }}"
+
+    - name: Verify the new fact on each host
+      debug:
+        msg: "Host {{ inventory_hostname }} now has average_count set to {{ hostvars[inventory_hostname].average_count }}"
