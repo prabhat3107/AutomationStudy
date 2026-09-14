@@ -35,6 +35,7 @@
               - "total_sum: {{ total_sum }}"
               - "host_count: {{ host_count }}"
               - "shared_average: {{ calculated_average }}"
+              - "rebalance_items: {{ rebalance_items }}"
 
         - name: Save the average to a shared fact space
           set_fact:
