@@ -1,44 +1,34 @@
 ---
 - name: Set facts and calculate average
-  hosts: cos9   # Replace with your actual inventory group or 5 hosts
-  gather_facts: false
-
-
-  tasks:
-    - name: Dynamically create 5 dummy hosts in memory
-      add_host:
-        name: "{{ item }}"
-        groups: target_hosts
-      loop: "{{ ansible_playbook_hosts }}"
-
-- name: Perform calculations on target hosts
-  hosts: target_hosts
+  hosts: cos9
   gather_facts: false
   tasks:
-    - name: Set random item_count for each host
+    - name: Set item_count for each host
       set_fact:
-        item_count: "{{ [10, 20, 30, 40, 50] | random }}"
+        # Generates a random number between 1 and 100 for testing
+        item_count: "{{ q('ansible.builtin.sequence', 'count=1') | map('random', start=200, end=600) | first | int }}"
 
-    - name: Show the item_count for each host
+    - name: Display individual host counts
       debug:
-        msg: "Host {{ inventory_hostname }} has {{ item_count }} items."
+        msg: "Host {{ inventory_hostname }} has item_count = {{ item_count }}"
 
-- name: Calculate and display the average
+- name: Calculate the average across all hosts
   hosts: localhost
   gather_facts: false
+  run_once: true
   tasks:
-    - name: Extract all item_counts and calculate average
+    - name: Extract facts and calculate average
       vars:
-        # 1. Map over all target hosts to get their 'item_count' fact
-        # 2. Convert values to integers
-        # 3. Sum them up and divide by the total number of hosts
-        all_counts: "{{ groups['target_hosts'] | map('extract', hostvars, 'item_count') | map('int') | list }}"
+        # 1. Pull the item_count fact from every host in the 'all' group
+        # 2. Convert them to integers
+        # 3. Sum and divide by the number of hosts
+        all_counts: "{{ groups['all'] | map('extract', hostvars, 'item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
-        host_count: "{{ groups['target_hosts'] | length }}"
+        host_count: "{{ groups['all'] | length }}"
         average_count: "{{ total_sum | int / host_count | int }}"
       debug:
         msg:
-          - "All counts: {{ all_counts }}"
+          - "All counts collected: {{ all_counts }}"
           - "Total Sum: {{ total_sum }}"
           - "Total Hosts: {{ host_count }}"
           - "Average Item Count: {{ average_count }}"
