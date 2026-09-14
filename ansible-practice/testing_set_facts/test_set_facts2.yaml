@@ -2,8 +2,7 @@
 - name: Set facts and calculate average
   hosts: all               # Target your 5 hosts here
   gather_facts: false
-  vars:
-    average_count: ""
+
   tasks:
     - name: Set a unique item_count for each host
       set_fact:
