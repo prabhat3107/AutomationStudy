@@ -22,5 +22,5 @@
         msg: "{{ hostvars[ inventory_hostname ].active_item_count | int }}"
     - name: print the list of active items
       ansible.builtin.debug:
-        msg: "{{ ansible_play_hosts_all | map('extract', hostvars) | list }}"
+        msg: "{{ ansible_play_hosts_all | map('extract', hostvars[ inventory_hostname ].active_item_count) | list }}"
       run_once: true
