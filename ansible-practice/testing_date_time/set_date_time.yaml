@@ -5,7 +5,7 @@
   tasks:
     - name: set current date time
       set_fact:
-        current_time: "{{ now(utc=true, fmt='%Y-%m-%d %H:%M:%S') }}"
+        current_time: "{{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}"
     - name: Set variable for 7 days ago
       ansible.builtin.set_fact:
         past_date: "{{ (now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S') }}"
