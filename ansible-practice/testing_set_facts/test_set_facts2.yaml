@@ -21,7 +21,8 @@
         all_counts: "{{ ansible_play_hosts | map('extract', hostvars, 'item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ ansible_play_hosts | length }}"
-      average_count: "{{ total_sum | int / host_count | int }}"
+      register:
+        average_count: "{{ total_sum | int / host_count | int }}"
       debug:
         msg:
           - "All counts collected: {{ all_counts }}"
