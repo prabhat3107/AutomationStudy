@@ -26,3 +26,10 @@
           - "Total Sum: {{ total_sum }}"
           - "Total Hosts: {{ host_count }}"
           - "Average Item Count: {{ average_count }}"
+    - name: Set the average item count to a fact
+      set_fact:
+        average_item_count: "{{ average_count }}"
+
+    - name: Display the average item count
+      debug:
+        msg: "Average Item Count: {{ hostvars.average_item_count }}"
