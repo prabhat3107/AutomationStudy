@@ -6,9 +6,10 @@
     - name: set current date time
       set_fact:
         current_time: "{{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}"
-  - name: Set variable for 7 days ago safely
-    ansible.builtin.set_fact:
-      past_date: "{{ '%Y-%m-%d %H:%M:%S' | ansible.builtin.strftime((now().strftime('%s') | int) - 604800) }}"
+
+    - name: Set variable for 7 days ago safely
+      ansible.builtin.set_fact:
+        past_date: "{{ '%Y-%m-%d %H:%M:%S' | ansible.builtin.strftime((now().strftime('%s') | int) - 604800) }}"
 
     - name: Print current date time
       debug:
