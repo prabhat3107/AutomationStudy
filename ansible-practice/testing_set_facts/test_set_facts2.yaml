@@ -6,7 +6,7 @@
     - name: Set item_count for each host
       set_fact:
         # Generates a random number between 1 and 100 for testing
-        item_count: "{{ q('ansible.builtin.sequence', 'count=1') | map('random', start=200, end=600) | first | int }}"
+        item_count: "{{ (ansible_play_hosts.index(inventory_hostname) + 1) * 10 }}"
 
     - name: Display individual host counts
       debug:
