@@ -2,11 +2,16 @@
 - name: Set facts and calculate average
   hosts: all               # Target your 5 hosts here
   gather_facts: false
-
   tasks:
+    - name: Get Active Items
+      ansible.builtin.shell:
+        cmd: /home/prabhat/get_value.sh
+      register: active_items
+      changed_when: false
+
     - name: Set a unique item_count for each host
       set_fact:
-        item_count: "{{ (ansible_play_hosts.index(inventory_hostname) + 1) * 10 }}"
+        item_count: "{{ active_items.stdout | int }}"
 
     - name: Display individual host counts
       debug:
