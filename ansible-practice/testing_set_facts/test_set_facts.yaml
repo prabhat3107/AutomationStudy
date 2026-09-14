@@ -1,6 +1,6 @@
 ---
 - name: Test set facts
-  hosts: node1.sriauronet.lan
+  hosts: all
 
 
   tasks:
@@ -20,3 +20,7 @@
     - name: Print the custom facts of the host
       ansible.builtin.debug:
         msg: "{{ hostvars[ inventory_hostname ].active_item_count | int }}"
+    - name: print the list of active items
+      ansible.builtin.debug:
+        msg: "{{ query('inventory_hostnames', ansible_play_hosts_all) | map('extract', hostvars) | list }}"
+      run_once: true
