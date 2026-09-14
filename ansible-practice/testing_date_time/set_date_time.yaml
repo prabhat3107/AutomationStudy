@@ -6,14 +6,14 @@
     - name: set current date time
       set_fact:
         current_time: "{{ now(utc=true,fmt='%Y-%m-%d %H:%M:%S') }}"
-#    - name: Set variable for 7 days ago
-#      ansible.builtin.set_fact:
-#        past_date: "{{ (now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S') }}"
+    - name: Set variable for 7 days ago
+      ansible.builtin.set_fact:
+        past_date: "{{ (now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S') }}"
 
     - name: Print current date time
       debug:
         msg: "{{ hostvars[inventory_hostname].current_time }}"
 
-#    - name: Print past date
-#      debug:
-#        msg: "{{ hostvars[inventory_hostname].past_date }}"
+    - name: Print past date
+      debug:
+        msg: "{{ hostvars[inventory_hostname].past_date }}"
