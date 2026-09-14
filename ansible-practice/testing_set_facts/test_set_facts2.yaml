@@ -1,27 +1,21 @@
 ---
 - name: Set facts and calculate average
-  hosts: cos9
+  hosts: all               # Target your 5 hosts here
   gather_facts: false
   tasks:
-    - name: Set item_count for each host
+    - name: Set a unique item_count for each host
       set_fact:
-        # Generates a random number between 1 and 100 for testing
         item_count: "{{ (ansible_play_hosts.index(inventory_hostname) + 1) * 10 }}"
 
     - name: Display individual host counts
       debug:
         msg: "Host {{ inventory_hostname }} has item_count = {{ item_count }}"
 
-- name: Calculate the average across all hosts
-  hosts: localhost
-  gather_facts: false
-  run_once: true
-  tasks:
     - name: Extract facts and calculate average
+      run_once: true       # Run this task exactly once
+      delegate_to: localhost # Execute the calculation on the control machine
       vars:
-        # 1. Map over all active play hosts to extract their 'item_count' fact
-        # 2. Force conversion to integers
-        # 3. Sum them up and divide by the total number of hosts
+        # Using ansible_play_hosts correctly grabs the 5 target hosts from this play
         all_counts: "{{ ansible_play_hosts | map('extract', hostvars, 'item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ ansible_play_hosts | length }}"
