@@ -35,7 +35,7 @@
         # 1. Map over all target hosts to get their 'item_count' fact
         # 2. Convert values to integers
         # 3. Sum them up and divide by the total number of hosts
-        all_counts: "{{ groups['all'] | map('extract', hostvars, 'item_count') | map('int') | list }}"
+        all_counts: "{{ groups['all'] | map('extract', hostvars, 'active_item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ groups['all'] | length }}"
         average_count: "{{ total_sum | int / host_count | int }}"
