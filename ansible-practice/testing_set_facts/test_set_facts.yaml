@@ -1,6 +1,6 @@
 ---
 - name: Test set facts
-  hosts: all
+  hosts: node1.sriauronet.lan
 
 
   tasks:
