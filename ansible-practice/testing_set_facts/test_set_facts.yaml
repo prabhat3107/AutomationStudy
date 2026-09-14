@@ -18,6 +18,5 @@
       set_fact:
         active_item_count: "{{ active_items.stdout }}"
     - name: Get All the active_items
-      hosts: node1.sriauronet.lan
       debug:
         var: ansible_facts
