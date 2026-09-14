@@ -26,6 +26,7 @@
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ ansible_play_hosts | length }}"
         calculated_average: "{{ total_sum | int / host_count | int }}"
+        rebalance_items: "{{ total_sum | int - calculated_average | int }}"
       block:
         - name: Print the collected metrics
           debug:
@@ -38,6 +39,7 @@
         - name: Save the average to a shared fact space
           set_fact:
             shared_average: "{{ calculated_average }}"
+            rebalance_items: "{{ rebalance_items }}"
 
     - name: Set average_count as a fact on all inventory hosts
       set_fact:
@@ -46,4 +48,5 @@
 
     - name: Verify the new fact on each host
       debug:
-        msg: "Host {{ inventory_hostname }} now has average_count set to {{ hostvars[inventory_hostname].average_count }}"
+        msg: "Host {{ inventory_hostname }} : average_count set to {{ hostvars[inventory_hostname].average_count }} and Rebalance items: {{ hostvars[inventory_hostname].rebalance_items }}"
+
