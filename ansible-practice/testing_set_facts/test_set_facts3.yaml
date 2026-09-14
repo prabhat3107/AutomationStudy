@@ -20,9 +20,19 @@
         all_counts: "{{ ansible_play_hosts | map('extract', hostvars, 'item_count') | map('int') | list }}"
         total_sum: "{{ all_counts | sum }}"
         host_count: "{{ ansible_play_hosts | length }}"
-      set_fact:
-        # Saving the calculated average to a temporary variable on the control host
-        shared_average: "{{ total_sum | int / host_count | int }}"
+        calculated_average: "{{ total_sum | int / host_count | int }}"
+      block:
+        - name: Print the collected metrics
+          debug:
+            msg:
+              - "all_counts: {{ all_counts }}"
+              - "total_sum: {{ total_sum }}"
+              - "host_count: {{ host_count }}"
+              - "shared_average: {{ calculated_average }}"
+
+        - name: Save the average to a shared fact space
+          set_fact:
+            shared_average: "{{ calculated_average }}"
 
     - name: Set average_count as a fact on all inventory hosts
       set_fact:
