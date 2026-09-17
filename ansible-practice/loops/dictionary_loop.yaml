@@ -18,7 +18,5 @@
   tasks:
     - name: Create user
       ansible.builtin.debug:
-        name: "{{ item.user_name }}"
-        group: "{{ item.group }}"
-        home: "{{ item.home_dir }}"
+        msg: "{{ item.user_name }} : {{ item.group }} : {{ item.home_dir }}"
       loop: "{{ my_dict_list }}"
