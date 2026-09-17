@@ -1,0 +1,24 @@
+---
+- name: Loop through dictionary
+  hosts: localhost
+  vars:
+    my_dict_list:
+      - user_name: prabhat
+        group: admin
+        home_dir: /home/prabhat
+      - user_name: priya
+        group: admin
+        home_dir: /home/priya
+      - user_name: billi
+        group: admin
+        home_dir: /home/billi
+      - user_name: john
+        group: admin
+        home_dir: /home/john
+  tasks:
+    - name: Create user
+      user:
+        name: "{{ item.user_name }}"
+        group: "{{ item.group }}"
+        home: "{{ item.home_dir }}"
+      loop: "{{ my_dict_list }}"
