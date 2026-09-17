@@ -1,5 +1,5 @@
 ---
-- name: Loop through dictionary
+- name: Loop Demonstration
   hosts: localhost
   vars:
     my_dict_list:
@@ -16,7 +16,16 @@
         group: admin
         home_dir: /home/john
   tasks:
-    - name: Create user
+    - name: Loop through array of dictionary
       ansible.builtin.debug:
         msg: "{{ item.user_name }} : {{ item.group }} : {{ item.home_dir }}"
       loop: "{{ my_dict_list }}"
+    - name: Loop though dictionary itslef
+      ansible.builtin.debug:
+        msg: "{{ item.key }} : {{ item.value }}"
+      loop: "{{ my_dict | dict2items }}"
+      vars:
+        my_dict:
+          user_name: prabhat
+          group: admin
+          home_dir: /home/prabhat
