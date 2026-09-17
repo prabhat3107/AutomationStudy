@@ -1,0 +1,10 @@
+---
+- name: Looping over a list
+  hosts: localhost
+  var_files:
+    - vars.yml
+  tasks:
+    - name: Print each item in the list
+      debug:
+        msg: "Showing {{ item }}"
+      loop: "{{ my_list }}"
