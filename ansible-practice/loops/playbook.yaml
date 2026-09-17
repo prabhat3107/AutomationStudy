@@ -1,0 +1,11 @@
+---
+- name: Looping over a list
+  hosts: all
+  tasks:
+  - name: Print each item in the list
+    debug:
+      msg: "{{ item }}"
+    loop:
+      - apple
+      - banana
+      - cherry
