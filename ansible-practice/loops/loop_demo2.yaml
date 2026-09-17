@@ -1,7 +1,7 @@
 ---
 - name: Looping over a list
   hosts: localhost
-  var_files:
+  vars_files:
     - vars.yml
   tasks:
     - name: Print each item in the list
