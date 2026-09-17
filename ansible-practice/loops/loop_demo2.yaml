@@ -15,4 +15,5 @@
       loop: "{{ my_list }}"
     - name: Another list
       debug:
-        msg: "Another list {{ my_billi }}"
+        msg: "Another list {{ item }}"
+      loop: "{{ my_billi }}"
