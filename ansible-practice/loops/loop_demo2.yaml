@@ -1,6 +1,11 @@
 ---
 - name: Looping over a list
   hosts: localhost
+  vars:
+    my_billi:
+      - priya
+      - billi
+      - meow
   vars_files:
     - vars.yml
   tasks:
@@ -8,3 +13,6 @@
       debug:
         msg: "Showing {{ item }}"
       loop: "{{ my_list }}"
+    - name: Another list
+      debug:
+        msg: "Another list {{ my_billi }}"
