@@ -29,3 +29,12 @@
           user_name: prabhat
           group: admin
           home_dir: /home/prabhat
+    - name: Show custom key/value names
+      ansible.builtin.debug:
+        msg: "User {{ item.username }} uses the {{ item.shell_type }} shell."
+      loop: "{{ users | dict2items(key_name='username', value_name='shell_type') }}"
+      vars:
+        users:
+          alice: "/bin/bash"
+          bob: "/bin/zsh"
+
