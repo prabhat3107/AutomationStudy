@@ -32,9 +32,9 @@
     ansible.builtin.set_fact:
       total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
       inventory_hostname_count: "{{ ansible_play_hosts | length }}"
-      average: "{{ total_sum | int / inventory_hostname_count | int }}"
-      rebalance_items: "{{ active_item_count | int  -  average | int }}"
-      rebalance_required: "{{ rebalance_items | int > 300 }}"
+      average: "{{ (ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length) }}"
+      rebalance_items: "{{ active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int }}"
+      rebalance_required: "{{ (active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int) | abs > 300 }}"a
 
   - name: Print Calculations
     ansible.builtin.debug:
