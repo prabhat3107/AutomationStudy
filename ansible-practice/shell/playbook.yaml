@@ -32,9 +32,9 @@
       msg: >
         Total sum is {{ total_sum }} 
         Average is {{ total_sum | int / inventory_hostname_count | int }}
-      vars:
-        total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
-        inventory_hostname_count: "{{ ansible_play_hosts | length }}"
+    vars:
+      total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
+      inventory_hostname_count: "{{ ansible_play_hosts | length }}"
 
 
   
