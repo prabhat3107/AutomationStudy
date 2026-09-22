@@ -26,5 +26,5 @@
   - name: Verify the variable type and value
     ansible.builtin.debug:
       msg: "Value is {{ active_item_count }} and its type is integer"
-    when: active_item_count is number
+    when: active_item_count | int is number
 
