@@ -18,11 +18,11 @@
       fi
       
       {{ ip_path|quote }} | grep ens33 -A4 | grep inet | awk '{ print $1, " : " ,$2}'
-    args:
-      executable: /bin/bash
-    timeout: 300
-    register: boot_entries_ls
-    failed_when: boot_entries_ls.rc != 0
+#    args:
+#      executable: /bin/bash
+#    timeout: 300
+#    register: boot_entries_ls
+#    failed_when: boot_entries_ls.rc != 0
   - name: "Print the entires"
     debug:
       msg: "{{ boot_entries_ls.stdout }}"
