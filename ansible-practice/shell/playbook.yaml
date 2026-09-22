@@ -5,12 +5,24 @@
   become_user: root
   vars:
     boot_entries: "/boot/loader/entries"
+    ip_path: "/usr/sbin/ip"
   tasks:
   - name: "This is to test shell module on ansible version in ansible version 2.16"
     shell: |
-      set timeout 300
-      ls -ltr {{ boot_entries|quote }}
+      set -e0 pipefail
+      set -u 
+      
+      if [[ ! -x {{ ip_path|quote }} ]]; then
+        echo "{{ ip_path }} not found" >&2
+        exit 1
+      fi
+      
+      {{ ip_path|quote }} | grep ens33 -A4 | grep inet | awk '{ print $1, " : " ,$2}'
+    args:
+      executable: /bin/bash
+    timeout: 300
     register: boot_entries_ls
+    failed_when: boot_entries_ls.rc != 0
   - name: "Print the entires"
     debug:
       msg: "{{ boot_entries_ls.stdout }}"
