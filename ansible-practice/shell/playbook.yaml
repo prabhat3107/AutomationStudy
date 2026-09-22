@@ -53,6 +53,7 @@
     ansible.builtin.debug:
       msg: >
         {{ ansible_play_hosts | select('extract', hostvars, 'rebalance_required') | list }}
+    run_once: true
 
 
 
