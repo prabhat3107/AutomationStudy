@@ -21,8 +21,8 @@
 #    args:
 #      executable: /bin/bash
 #    timeout: 300
-#    register: boot_entries_ls
+    register: ip_entry
 #    failed_when: boot_entries_ls.rc != 0
-  - name: "Print the entires"
+  - name: "Print the ip_entry"
     debug:
-      msg: "{{ boot_entries_ls.stdout }}"
+      msg: "{{ ip_entry.stdout }}"
