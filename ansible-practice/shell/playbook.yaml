@@ -17,7 +17,7 @@
         exit 1
       fi
       
-      {{ ip_path|quote }} | grep ens33 -A4 | grep inet | awk '{ print $1, " : " ,$2}'
+      {{ ip_path|quote }} addr show | grep ens33 -A4 | grep inet | awk '{ print $1, " : " ,$2}'
 #    args:
 #      executable: /bin/bash
 #    timeout: 300
