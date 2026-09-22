@@ -9,7 +9,7 @@
   tasks:
   - name: "This is to test shell module on ansible version in ansible version 2.16"
     shell: |
-      set -e0 pipefail
+      set -eo pipefail
       set -u 
       
       if [[ ! -x {{ ip_path|quote }} ]]; then
