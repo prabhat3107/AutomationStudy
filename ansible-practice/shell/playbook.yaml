@@ -1,13 +1,13 @@
 ---
 - name: "This is to test shell module on ansible version in ansible version 2.16"
-  hosts: cos9
+  hosts: all
   become: true
   become_user: root
   vars:
     boot_entries: "/boot/loader/entries"
     ip_path: "/usr/sbin/ip"
   tasks:
-  - name: "This is to test shell module on ansible version in ansible version 2.16"
+  - name: "Print a random number from play hosts"
     shell: |
       set -eo pipefail
       set -u 
@@ -19,4 +19,12 @@
 #    failed_when: boot_entries_ls.rc != 0
   - name: "Print the active_item"
     debug:
-      msg: "{{ active_item.stdout }}"
+      msg: "{{ active_item.stdout | trim | int }}"
+  - name: "Set this as a fact"
+    ansible.builtin.set_fact:
+      active_item_count: "{{ active_item.stdout | trim | int }}"
+  - name: Verify the variable type and value
+    ansible.builtin.debug:
+      msg: "Value is {{ active_item_count }} and its type is integer"
+    when: active_item_count is number
+
