@@ -11,18 +11,12 @@
     shell: |
       set -eo pipefail
       set -u 
-      
-      if [[ ! -x {{ ip_path|quote }} ]]; then
-        echo "{{ ip_path }} not found" >&2
-        exit 1
-      fi
-      
-      {{ ip_path|quote }} addr show | grep ens33 -A4 | grep inet | awk '{ print $1, " : " ,$2}'
-#    args:
-#      executable: /bin/bash
-#    timeout: 300
-    register: ip_entry
+      echo $RANDOM
+    args:
+      executable: /bin/bash
+    timeout: 300
+    register: active_item
 #    failed_when: boot_entries_ls.rc != 0
-  - name: "Print the ip_entry"
+  - name: "Print the active_item"
     debug:
-      msg: "{{ ip_entry.stdout }}"
+      msg: "{{ active_item.stdout }}"
