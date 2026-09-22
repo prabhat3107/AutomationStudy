@@ -1,6 +1,6 @@
 ---
 - name: "This is to test shell module on ansible version in ansible version 2.16"
-  hosts: localhost
+  hosts: cos9
   become: true
   become_user: root
   vars:
