@@ -34,7 +34,7 @@
       inventory_hostname_count: "{{ ansible_play_hosts | length }}"
       average: "{{ (ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length) }}"
       rebalance_items: "{{ active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int }}"
-      rebalance_required: "{{ (active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int) | abs > 300 }}"a
+      rebalance_required: "{{ (active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int) | abs > 300 }}"
 
   - name: Print Calculations
     ansible.builtin.debug:
