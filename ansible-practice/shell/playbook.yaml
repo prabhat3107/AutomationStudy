@@ -30,7 +30,6 @@
 
   - name: Add active_item_count from all the play hosts and calculate average
     ansible.builtin.set_fact:
-    vars:
       total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
       inventory_hostname_count: "{{ ansible_play_hosts | length }}"
       average: "{{ total_sum | int / inventory_hostname_count | int }}"
