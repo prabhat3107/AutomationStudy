@@ -1,0 +1,16 @@
+---
+- name: "This is to test shell module on ansible version in ansible version 2.16"
+  hosts: localhost
+  become: true
+  become_user: root
+  vars:
+    boot_entries: "/boot/loader/entries"
+  tasks:
+  - name: "This is to test shell module on ansible version in ansible version 2.16"
+    shell: |
+      set timeout 300
+      ls -ltr {{ boot_entries|quote }}
+    register: boot_entries_ls
+  - name: "Print the entires"
+    debug:
+      msg: "{{ boot_entries_ls.stdout }}"
