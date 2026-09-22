@@ -23,8 +23,19 @@
   - name: "Set this as a fact"
     ansible.builtin.set_fact:
       active_item_count: "{{ active_item.stdout | trim | int }}"
-  - name: Verify the variable type and value
+#  - name: Verify the variable type and value
+#    ansible.builtin.debug:
+#      msg: "Value is {{ active_item_count }} and its type is integer"
+#    when: active_item_count | int is number
+  - name: Add active_item_count from all the play hosts and calculate average
     ansible.builtin.debug:
-      msg: "Value is {{ active_item_count }} and its type is integer"
-    when: active_item_count | int is number
+      msg: >
+        Total sum is {{ total_sum }} 
+        Average is {{ total_sum | int / inventory_hostname_count | int }}
+      vars:
+        total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
+        inventory_hostname_count: "{{ ansible_play_hosts | length }}"
+
+
+  
 
