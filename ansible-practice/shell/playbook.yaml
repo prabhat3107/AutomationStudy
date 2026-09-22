@@ -52,7 +52,7 @@
   - name: Print the list of plybook hosts that has rebalace_required set to True
     ansible.builtin.debug:
       msg: >
-        {{ ansible_play_hosts | select('extract', hostvars, 'rebalance_required') | list }}
+        {{ ansible_play_hosts | selectattr('rebalance_required') | list }}
     run_once: true
 
 
