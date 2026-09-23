@@ -35,6 +35,11 @@
           - "Average: {{ average }}"
           - "Rebalance items: {{ rebalance_items }}"
           - "Rebalance required: {{ rebalance_required }}"
+    - name: generate the rebalance command only when rebalance required is set to true.
+      ansible.builtin.debug:
+        msg: >
+          Rebalance command: adhmon -rebal  <route name> <service name> {{ rebalance_items }} 300
+      when: rebalance_required
 
     - name: List play hosts that have rebalance_required set to true
       ansible.builtin.debug:
