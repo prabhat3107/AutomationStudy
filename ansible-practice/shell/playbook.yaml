@@ -1,66 +1,50 @@
 ---
-- name: "This is to test shell module on ansible version in ansible version 2.16"
+- name: Calculate active item counts and determine rebalance requirement across play hosts
   hosts: all
   become: true
   become_user: root
-  vars:
-    boot_entries: "/boot/loader/entries"
-    ip_path: "/usr/sbin/ip"
   tasks:
-  - name: "Print a random number from play hosts"
-    shell: |
-      set -eo pipefail
-      set -u 
-      echo $RANDOM
-    args:
-      executable: /bin/bash
-    timeout: 300
-    register: active_item
-#    failed_when: boot_entries_ls.rc != 0
-  - name: "Print the active_item"
-    debug:
-      msg: "{{ active_item.stdout | trim | int }}"
-  - name: "Set this as a fact"
-    ansible.builtin.set_fact:
-      active_item_count: "{{ active_item.stdout | trim | int }}"
-#  - name: Verify the variable type and value
-#    ansible.builtin.debug:
-#      msg: "Value is {{ active_item_count }} and its type is integer"
-#    when: active_item_count | int is number
+    - name: Get active_item as a random number from each host
+      ansible.builtin.shell: |
+        set -eo pipefail
+        set -u
+        echo $RANDOM
+      args:
+        executable: /bin/bash
+      register: active_item
+      changed_when: false
 
-  - name: Add active_item_count from all the play hosts and calculate average
-    ansible.builtin.set_fact:
-      total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
-      inventory_hostname_count: "{{ ansible_play_hosts | length }}"
-      average: "{{ (ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length) }}"
-      rebalance_items: "{{ active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int }}"
-      rebalance_required: "{{ (active_item_count | int - ((ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length)) | int) | abs > 300 }}"
+    - name: Set active_item as custom fact active_item_count
+      ansible.builtin.set_fact:
+        active_item_count: "{{ active_item.stdout | trim | int }}"
 
-  - name: Print Calculations
-    ansible.builtin.debug:
-      msg: >
-        Total sum: {{ total_sum }}
-        Inventory host count: {{ inventory_hostname_count }} 
-        Average: {{ average }}
-        Rebalance items: {{ rebalance_items }}
-        Rebalance required: {{ rebalance_required }}
+    - name: Calculate sum of active_item_count across all play hosts and compute average
+      ansible.builtin.set_fact:
+        total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
+        average: "{{ (ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length) }}"
 
-  - name: Mark rebalance_required as a fact
-    ansible.builtin.set_fact:
-      rebalance_required: "{{ rebalance_items | int > 300 }}"
+    - name: Calculate difference (rebalance_items) and determine rebalance_required
+      ansible.builtin.set_fact:
+        rebalance_items: "{{ (active_item_count | int) - (average | int) }}"
+        rebalance_required: "{{ ((active_item_count | int) - (average | int)) > 300 }}"
 
-  - name: Print the list of plybook hosts that has rebalace_required set to True
-    ansible.builtin.debug:
-      msg: >
-        Hosts needing rebalance: 
-        {{ ansible_play_hosts | selectattr('ansible_facts.rebalance_required', 'defined') | selectattr('ansible_facts.rebalance_required', 'equalto', true) | list }}
-    run_once: true
+    - name: Print debug info (Total sum, average, rebalance_items, rebalance_required)
+      ansible.builtin.debug:
+        msg:
+          - "Total sum: {{ total_sum }}"
+          - "Average: {{ average }}"
+          - "Rebalance items: {{ rebalance_items }}"
+          - "Rebalance required: {{ rebalance_required }}"
 
-
-
-
-
-
-
-  
-
+    - name: List play hosts that have rebalance_required set to true
+      ansible.builtin.debug:
+        msg: >-
+          {{
+            ansible_play_hosts
+            | map('extract', hostvars)
+            | selectattr('rebalance_required', 'defined')
+            | selectattr('rebalance_required', 'equalto', true)
+            | map(attribute='inventory_hostname')
+            | list
+          }}
+      run_once: true
