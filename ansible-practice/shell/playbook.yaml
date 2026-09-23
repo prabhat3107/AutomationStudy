@@ -22,6 +22,7 @@
       ansible.builtin.set_fact:
         total_sum: "{{ ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum }}"
         average: "{{ (ansible_play_hosts | map('extract', hostvars, 'active_item_count') | map('int') | sum) / (ansible_play_hosts | length) | int }}"
+      run_once: true
 
     - name: Calculate difference (rebalance_items) and determine rebalance_required
       ansible.builtin.set_fact:
